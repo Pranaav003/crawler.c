@@ -6,7 +6,7 @@
 #define MAX_ADDR_LENGTH 1000
 
 /*
- * a node in our linked-list of web addresses
+ * a node in our linked-list of web addresse
  */
 struct listNode{
   char addr[MAX_ADDR_LENGTH];
@@ -117,9 +117,15 @@ int main(int argc, char** argv){
  *    and returns 0 otherwise
  */
 int contains(const struct listNode *pNode, const char *addr){
-  // TODO: complete this
+  if(pNode == NULL) {
+    return 0;
+  }
 
-  return 0;
+  if(strcmp(pNode->addr, addr) == 0) {
+    return 1;
+  }
+
+  return contains(pNode->next, addr);
 }
     
 
@@ -128,7 +134,19 @@ int contains(const struct listNode *pNode, const char *addr){
  *    the list
  */
 void insertBack(struct listNode *pNode, const char *addr){
-  // TODO: complete this
+  if(pNode->next == NULL) {
+    struct listNode *newNode = malloc(sizeof(struct listNode));
+    if(newNode == NULL) {
+      fprintf(stderr, "ERROR: could not allocate memory\n");
+      exit(-1);
+    }
+    strncpy(newNode->addr, addr, MAX_ADDR_LENGTH);
+    newNode->next = NULL;
+    pNode->next = newNode;
+    return;
+  }
+
+  insertBack(pNode->next, addr);
 }
 
 
@@ -137,14 +155,22 @@ void insertBack(struct listNode *pNode, const char *addr){
  *   one on each line
  */
 void printAddresses(const struct listNode *pNode){
-  // TODO: complete this
-}
+  if(pNode == NULL) {
+    return;
+  }
 
-/*
- * frees the memory associated with this node and all subsequent nodes
- */
+  printf("%s\n", pNode->addr);
+
+  printAddresses(pNode->next);
+}
 void destroyList(struct listNode *pNode){
-  // TODO: complete this
+  if(pNode == NULL) {
+    return;
+  }
+
+  destroyList(pNode->next);
+
+  free(pNode);
 }
   
 
